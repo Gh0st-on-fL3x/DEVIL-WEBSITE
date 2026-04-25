@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devil Aviation Belge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --gold-dim: #7a5e25;
+      --black: #0a0a0c;
+      --dark: #111115;
+      --dark2: #18181e;
+      --dark3: #22222a;
+      --text: #e8e0d0;
+      --text-muted: #7a7260;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: linear-gradient(to bottom, rgba(10,10,12,0.95), transparent);
+      backdrop-filter: blur(4px);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 13px; letter-spacing: 0.25em;
+      color: var(--gold); text-transform: uppercase;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-logo img {
+      height: 36px; width: 36px; object-fit: contain;
+    }
+    .nav-logo-placeholder {
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: var(--gold-dim);
+    }
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 60px,
+          rgba(201,168,76,0.03) 60px,
+          rgba(201,168,76,0.03) 61px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 60px,
+          rgba(201,168,76,0.03) 60px,
+          rgba(201,168,76,0.03) 61px
+        );
+    }
+
+    /* Animated planes */
+    .plane-trail {
+      position: absolute;
+      width: 2px; height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      opacity: 0.15;
+      animation: trail 8s ease-in-out infinite;
+    }
+    .plane-trail:nth-child(1) { left: 20%; top: -10%; animation-delay: 0s; transform: rotate(30deg); }
+    .plane-trail:nth-child(2) { left: 50%; top: -10%; animation-delay: 2.5s; transform: rotate(20deg); }
+    .plane-trail:nth-child(3) { left: 75%; top: -10%; animation-delay: 5s; transform: rotate(35deg); }
+    @keyframes trail {
+      0% { transform: rotate(30deg) translateY(-100px); opacity: 0; }
+      30% { opacity: 0.2; }
+      100% { transform: rotate(30deg) translateY(120vh); opacity: 0; }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900; line-height: 0.95;
+      color: #fff;
+      text-shadow: 0 0 80px rgba(201,168,76,0.3);
+      opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+    }
+    .hero-title span { color: var(--gold); display: block; }
+    .hero-sub {
+      font-size: 13px; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 1.5rem;
+      opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+    }
+    .hero-divider {
+      width: 80px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 2rem auto;
+      opacity: 0; animation: fadeUp 0.8s 0.7s forwards;
+    }
+    .hero-desc {
+      max-width: 560px; font-size: 15px; line-height: 1.8;
+      color: var(--text-muted); font-weight: 300;
+      opacity: 0; animation: fadeUp 0.8s 0.9s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; margin-top: 2.5rem;
+      opacity: 0; animation: fadeUp 0.8s 1.1s forwards;
+    }
+    .btn-primary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 14px 36px;
+      background: var(--gold); color: var(--black);
+      border: none; cursor: pointer;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: background 0.2s, transform 0.2s;
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-secondary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 13px 36px;
+      background: transparent; color: var(--gold);
+      border: 1px solid var(--gold-dim); cursor: pointer;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 4rem;
+      opacity: 0; animation: fadeUp 0.8s 1.3s forwards;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem; font-weight: 600; color: var(--gold);
+    }
+    .stat-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 4px;
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--text-muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .scroll-hint::after {
+      content: ''; display: block;
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTIONS COMMUNES ── */
+    section { padding: 6rem 3rem; }
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 600; color: #fff; line-height: 1.2;
+    }
+    .section-divider {
+      width: 60px; height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 1.5rem 0;
+    }
+    .max-w { max-width: 1100px; margin: 0 auto; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--dark); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center; margin-top: 3rem;
+    }
+    .about-text p {
+      font-size: 15px; line-height: 1.9; color: var(--text-muted);
+      font-weight: 300; margin-bottom: 1rem;
+    }
+    .about-facts {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .fact-card {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 1.25rem 1.5rem;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    }
+    .fact-card-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold-dim); margin-bottom: 6px;
+    }
+    .fact-card-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 600; color: var(--text);
+    }
+
+    /* ── TEAM ── */
+    #team { background: var(--black); }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .member-card {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.1);
+      padding: 1.75rem 1.5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+    }
+    .member-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .member-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+    .member-card:hover::before { transform: scaleX(1); }
+    .member-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--dark3);
+      border: 2px solid var(--gold-dim);
+      margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold);
+    }
+    .member-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 600; color: #fff;
+      letter-spacing: 0.05em;
+    }
+    .member-role {
+      font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-top: 4px;
+    }
+
+    /* ── ENTRAÎNEMENTS ── */
+    #training { background: var(--dark); }
+    .training-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start; margin-top: 3rem;
+    }
+    .schedule-block {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 2rem;
+    }
+    .schedule-item {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .schedule-item:last-child { border-bottom: none; }
+    .schedule-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .schedule-text strong {
+      display: block; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px; color: #fff; font-weight: 600;
+    }
+    .schedule-text span { font-size: 13px; color: var(--text-muted); }
+    .values-list { display: flex; flex-direction: column; gap: 1rem; }
+    .value-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .value-num {
+      font-family: 'Cinzel', serif; font-size: 11px;
+      color: var(--gold); min-width: 24px; padding-top: 2px;
+    }
+    .value-text strong {
+      display: block; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px; color: #fff; font-weight: 600;
+    }
+    .value-text span { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── GALERIE ── */
+    #media { background: var(--black); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 180px);
+      gap: 8px; margin-top: 3rem;
+    }
+    .gallery-item {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.08);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      cursor: pointer; transition: border-color 0.3s;
+    }
+    .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+    .gallery-item:hover { border-color: rgba(201,168,76,0.4); }
+    .gallery-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--gold-dim); font-size: 11px; letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .gallery-placeholder svg { opacity: 0.4; }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(201,168,76,0.05);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-notice {
+      text-align: center; margin-top: 1.5rem;
+      font-size: 13px; color: var(--text-muted);
+    }
+
+    /* ── RECRUTEMENT ── */
+    #recruit {
+      background: var(--dark);
+      text-align: center;
+    }
+    .recruit-inner { max-width: 680px; margin: 0 auto; }
+    .recruit-inner .section-divider { margin: 1.5rem auto; }
+    .recruit-desc {
+      font-size: 15px; line-height: 1.9; color: var(--text-muted);
+      font-weight: 300; margin-bottom: 2.5rem;
+    }
+    .recruit-tags {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: center; margin-bottom: 2.5rem;
+    }
+    .tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 6px 18px;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold); background: rgba(201,168,76,0.05);
+    }
+
+    /* Discord join button */
+    .discord-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 16px 40px;
+      background: #5865F2; color: #fff;
+      border: none; cursor: pointer;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: background 0.2s, transform 0.2s;
+      font-weight: 700;
+    }
+    .discord-btn:hover { background: #4752c4; transform: translateY(-2px); }
+    .discord-btn svg { flex-shrink: 0; }
+    .consent-notice {
+      font-size: 11px; color: var(--text-muted);
+      margin-top: 1rem; line-height: 1.6;
+    }
+    .consent-notice a { color: var(--gold-dim); }
+
+    /* ── PARTENARIATS ── */
+    #partners { background: var(--black); }
+    .partners-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px; background: rgba(201,168,76,0.1);
+      margin-top: 3rem; border: 1px solid rgba(201,168,76,0.1);
+    }
+    .partner-card {
+      background: var(--dark2);
+      padding: 2.5rem 2rem; text-align: center;
+      transition: background 0.3s;
+    }
+    .partner-card:hover { background: var(--dark3); }
+    .partner-logo {
+      width: 60px; height: 60px; margin: 0 auto 1rem;
+      border-radius: 50%; background: var(--dark3);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 10px; color: var(--gold-dim);
+    }
+    .partner-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px; font-weight: 600; color: #fff;
+    }
+    .partner-type {
+      font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold-dim); margin-top: 4px;
+    }
+    .partners-cta {
+      text-align: center; margin-top: 2.5rem;
+      color: var(--text-muted); font-size: 14px;
+    }
+    .partners-cta a {
+      color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid var(--gold-dim);
+      padding-bottom: 1px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark2);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 12px; letter-spacing: 0.2em; color: var(--gold-dim);
+    }
+    .footer-copy { font-size: 12px; color: var(--text-muted); }
+
+    /* ── MODAL CONSENTEMENT ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(10,10,12,0.85);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--dark2);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 2.5rem;
+      max-width: 440px; width: 90%;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .modal-backdrop.open .modal { transform: translateY(0); }
+    .modal h3 {
+      font-family: 'Cinzel', serif; font-size: 18px; color: #fff;
+      margin-bottom: 1rem;
+    }
+    .modal-notice {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 1rem; font-size: 13px; color: var(--text-muted);
+      line-height: 1.7; margin-bottom: 1.5rem;
+    }
+    .modal-notice strong { color: var(--text); }
+    .modal-consent {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; color: var(--text-muted); margin-bottom: 1.5rem;
+      cursor: pointer;
+    }
+    .modal-consent input { margin-top: 2px; flex-shrink: 0; accent-color: var(--gold); }
+    .modal-actions { display: flex; gap: 1rem; }
+    .modal-cancel {
+      flex: 1; padding: 11px;
+      background: transparent; color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: border-color 0.2s;
+    }
+    .modal-cancel:hover { border-color: rgba(255,255,255,0.3); }
+    .modal-confirm {
+      flex: 2; padding: 11px;
+      background: #5865F2; color: #fff;
+      border: none; cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+      font-weight: 700;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: background 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+    }
+    .modal-confirm:hover { background: #4752c4; }
+    .modal-confirm:disabled { background: #555; cursor: not-allowed; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid, .training-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <img src="logo.png"
+      <div class="nav-logo-placeholder">DA</div>
+      Devil Aviation
+    </div>
+    <ul class="nav-links">
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#team">Équipe</a></li>
+      <li><a href="#training">Organisation</a></li>
+      <li><a href="#media">Médias</a></li>
+      <li><a href="#recruit">Recrutement</a></li>
+      <li><a href="#partners">Partenariats</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg">
+      <div class="plane-trail"></div>
+      <div class="plane-trail"></div>
+      <div class="plane-trail"></div>
+    </div>
+    <p class="hero-eyebrow">Équipe virtuelle de voltige aérienne — Belgique</p>
+    <h1 class="hero-title">Devil<span>Aviation</span></h1>
+    <p class="hero-sub">Fondée le 3 juillet 2022 · PlayStation 5 · GTA V</p>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">Inspirée des légendaires Red Devils, patrouille officielle de la Force Aérienne Belge, nous rendons hommage à l'art du vol de précision à travers des démonstrations aériennes immersives et visuellement impactantes.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="openDiscordModal()">Rejoindre l'équipe</button>
+      <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Découvrir</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">2022</div>
+        <div class="stat-label">Fondée</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">V-65</div>
+        <div class="stat-label">Molotok</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">PS5</div>
+        <div class="stat-label">Plateforme</div>
+      </div>
+    </div>
+    <div class="scroll-hint">Défiler</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="max-w">
+      <p class="section-label">Notre histoire</p>
+      <h2 class="section-title">Une passion,<br>une discipline</h2>
+      <div class="section-divider"></div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>Fondée le 3 juillet 2022, la Devil Aviation Belge est une équipe virtuelle spécialisée dans la voltige aérienne sur GTA 5. Chaque show est une chorégraphie de précision, pensée pour offrir un rendu visuel impactant.</p>
+          <p>Nos manœuvres coordonnées, réalisées en formation avec le V-65 Molotok, demandent rigueur, synchronisation et un réel travail d'équipe. Nous nous inspirons des Red Devils, patrouille officielle de la Force Aérienne Belge.</p>
+          <p>Notre mission : partager la passion de l'aviation à travers des expériences immersives et réalistes, dans une communauté soudée et exigeante.</p>
+        </div>
+        <div class="about-facts">
+          <div class="fact-card">
+            <div class="fact-card-label">Plateforme</div>
+            <div class="fact-card-value">PlayStation 5</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-card-label">Avion</div>
+            <div class="fact-card-value">V-65 Molotok</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-card-label">Sessions</div>
+            <div class="fact-card-value">Chaque week-end</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-card-label">Inspiration</div>
+            <div class="fact-card-value">Red Devils BAF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="max-w">
+      <p class="section-label">Notre équipe</p>
+      <h2 class="section-title">Les pilotes</h2>
+      <div class="section-divider"></div>
+      <div class="team-grid">
+        <!-- Ajoute / modifie les membres ici -->
+        <div class="member-card">
+          <div class="member-avatar">L</div>
+          <div class="member-name">Kawa-01K</div>
+          <div class="member-role">Leader</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P1</div>
+          <div class="member-name">Ethan</div>
+          <div class="member-role">Intérieur Droit</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P2</div>
+          <div class="member-name">Cedzo, Faze, Sky</div>
+          <div class="member-role">Intérieur Gauche</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P3</div>
+          <div class="member-name">Hunter</div>
+          <div class="member-role">Charognard</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">S</div>
+          <div class="member-name">Gaetan</div>
+          <div class="member-role">Extérieur Gauche</div>
+        </div>
+               <div class="member-card">
+          <div class="member-avatar">L</div>
+          <div class="member-name">Milan</div>
+          <div class="member-role">Extérieur Droit</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P1</div>
+          <div class="member-name">SVNUIXIAZ</div>
+          <div class="member-role">Second Solo</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P2</div>
+          <div class="member-name">Adamech, Nxito</div>
+          <div class="member-role">Leader Solo</div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">P3</div>
+          <div class="member-name">Fire</div>
+          <div class="member-role">Remplacant</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;font-size:13px;color:var(--text-muted);">Personnalise les noms, rôles et initiales selon les vrais membres de ton équipe.</p>
+    </div>
+  </section>
+
+  <!-- TRAINING -->
+  <section id="training">
+    <div class="max-w">
+      <p class="section-label">Organisation</p>
+      <h2 class="section-title">Entraînements<br>& valeurs</h2>
+      <div class="section-divider"></div>
+      <div class="training-inner">
+        <div>
+          <div class="schedule-block">
+            <div class="schedule-item">
+              <div class="schedule-icon">✈</div>
+              <div class="schedule-text">
+                <strong>Sessions hebdomadaires</strong>
+                <span>Chaque week-end à 21h00</span>
+              </div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-icon">🎯</div>
+              <div class="schedule-text">
+                <strong>Shows publics</strong>
+                <span>Organisés régulièrement avec partenaires</span>
+              </div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-icon">🤝</div>
+              <div class="schedule-text">
+                <strong>Partenariats ouverts</strong>
+                <span>Collaborations avec d'autres crews</span>
+              </div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-icon">🛡</div>
+              <div class="schedule-text">
+                <strong>Accès sécurisé</strong>
+                <span>Vérification des membres avant admission</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="values-list">
+          <div class="value-item">
+            <div class="value-num">01</div>
+            <div class="value-text">
+              <strong>Discipline</strong>
+              <span>Rigueur dans les manœuvres et le respect des horaires.</span>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-num">02</div>
+            <div class="value-text">
+              <strong>Esprit d'équipe</strong>
+              <span>Chaque figure est réalisée en coordination totale.</span>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-num">03</div>
+            <div class="value-text">
+              <strong>Respect</strong>
+              <span>Une ambiance saine et bienveillante avant tout.</span>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-num">04</div>
+            <div class="value-text">
+              <strong>Progression</strong>
+              <span>Ouverts aux débutants motivés comme aux pilotes expérimentés.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDIA -->
+  <section id="media">
+    <div class="max-w">
+      <p class="section-label">Médias</p>
+      <h2 class="section-title">Nos shows</h2>
+      <div class="section-divider"></div>
+      <div class="gallery-grid">
+        <!-- Remplace les placeholders par tes vraies images/vidéos -->
+        <div class="gallery-item">
+          <div class="gallery-overlay"></div>
+          <div class="gallery-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m10 8 6 4-6 4V8z"/>
+            </svg>
+            Vidéo show principal
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-overlay"></div>
+          <div class="gallery-placeholder">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m21 15-5-5L5 21"/>
+            </svg>
+            Photo
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-overlay"></div>
+          <div class="gallery-placeholder">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m21 15-5-5L5 21"/>
+            </svg>
+            Photo
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-overlay"></div>
+          <div class="gallery-placeholder">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8" cy="8" r="2"/><path d="m21 15-5-5L5 21"/>
+            </svg>
+            Photo
+          </div>
+        </div>
+      </div>
+      <p class="gallery-notice">Ajoute tes propres captures d'écran ou vidéos en remplaçant les blocs dans le code HTML.</p>
+    </div>
+  </section>
+
+  <!-- RECRUTEMENT -->
+  <section id="recruit">
+    <div class="max-w">
+      <div class="recruit-inner">
+        <p class="section-label">Rejoindre l'équipe</p>
+        <h2 class="section-title">Recrutement ouvert</h2>
+        <div class="section-divider"></div>
+        <p class="recruit-desc">Nous accueillons tous les profils — débutants motivés ou pilotes expérimentés. Aucune limite d'âge, mais une exigence sur les qualités humaines et l'implication. Voler ensemble doit rester un plaisir, tout en visant l'excellence.</p>
+        <div class="recruit-tags">
+          <span class="tag">Discipline</span>
+          <span class="tag">Esprit d'équipe</span>
+          <span class="tag">Respect</span>
+          <span class="tag">Motivation</span>
+          <span class="tag">PS5</span>
+          <span class="tag">GTA V</span>
+        </div>
+        <button class="discord-btn" onclick="openDiscordModal()">
+          <svg width="20" height="16" viewBox="0 0 71 55" fill="white">
+            <path d="M60.1 4.9A58.5 58.5 0 0 0 45.4.7a.2.2 0 0 0-.2.1 40.7 40.7 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.6 37.6 0 0 0 25.4.8a.2.2 0 0 0-.2-.1A58.4 58.4 0 0 0 10.6 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.2 58.8 58.8 0 0 0 17.7 8.9.2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.7 38.7 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.3 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36 36 0 0 1-5.6 2.6.2.2 0 0 0-.1.3 47 47 0 0 0 3.6 5.9.2.2 0 0 0 .2.1A58.7 58.7 0 0 0 70.6 44a.2.2 0 0 0 .1-.2C73 29.4 69.2 16.6 60.2 5a.2.2 0 0 0-.1-.1ZM23.7 35.9c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.7 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/>
+          </svg>
+          Rejoindre le Discord
+        </button>
+        <p class="consent-notice">En rejoignant, votre adresse IP sera enregistrée à des fins de sécurité (anti double-compte).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTENARIATS -->
+  <section id="partners">
+    <div class="max-w">
+      <p class="section-label">Partenariats</p>
+      <h2 class="section-title">Nos partenaires</h2>
+      <div class="section-divider"></div>
+      <div class="partners-grid">
+        <!-- Ajoute tes vrais partenaires ici -->
+        <div class="partner-card">
+          <div class="partner-logo">P1</div>
+          <div class="partner-name">Partenaire 1</div>
+          <div class="partner-type">Crew GTA</div>
+        </div>
+        <div class="partner-card">
+          <div class="partner-logo">P2</div>
+          <div class="partner-name">Partenaire 2</div>
+          <div class="partner-type">Crew GTA</div>
+        </div>
+        <div class="partner-card">
+          <div class="partner-logo">P3</div>
+          <div class="partner-name">Partenaire 3</div>
+          <div class="partner-type">Événements</div>
+        </div>
+      </div>
+      <p class="partners-cta">Intéressé par un partenariat ? <a href="#recruit" onclick="openDiscordModal()">Contactez-nous sur Discord</a></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Devil Aviation Belge © 2022–2026</div>
+    <div class="footer-copy">Fondée le 3 juillet 2022 · GTA V · PS5</div>
+  </footer>
+
+  <!-- MODAL CONSENTEMENT -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h3>Rejoindre le serveur</h3>
+      <div class="modal-notice">
+        <strong>Collecte de données de sécurité</strong><br>
+        Pour éviter les doubles comptes et les retours après bannissement, votre <strong>adresse IP</strong> sera enregistrée lors de cette action. Ces données sont utilisées uniquement par le staff et ne sont pas partagées avec des tiers.
+      </div>
+      <label class="modal-consent">
+        <input type="checkbox" id="modalConsent" />
+        J'accepte la collecte de mon adresse IP à des fins de sécurité du serveur.
+      </label>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal()">Annuler</button>
+        <button class="modal-confirm" id="modalConfirm" onclick="confirmJoin()">
+          <svg width="16" height="13" viewBox="0 0 71 55" fill="white">
+            <path d="M60.1 4.9A58.5 58.5 0 0 0 45.4.7a.2.2 0 0 0-.2.1 40.7 40.7 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.6 37.6 0 0 0 25.4.8a.2.2 0 0 0-.2-.1A58.4 58.4 0 0 0 10.6 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.7a.2.2 0 0 0 .1.2 58.8 58.8 0 0 0 17.7 8.9.2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.7 38.7 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.3 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36 36 0 0 1-5.6 2.6.2.2 0 0 0-.1.3 47 47 0 0 0 3.6 5.9.2.2 0 0 0 .2.1A58.7 58.7 0 0 0 70.6 44a.2.2 0 0 0 .1-.2C73 29.4 69.2 16.6 60.2 5a.2.2 0 0 0-.1-.1ZM23.7 35.9c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Zm23.7 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2Z"/>
+          </svg>
+          Rejoindre Discord
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openDiscordModal() {
+      document.getElementById('modal').classList.add('open');
+      document.getElementById('modalConsent').checked = false;
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    async function confirmJoin() {
+      if (!document.getElementById('modalConsent').checked) {
+        alert('Veuillez cocher la case pour continuer.');
+        return;
+      }
+      const btn = document.getElementById('modalConfirm');
+      btn.disabled = true;
+      btn.textContent = 'Vérification...';
+      try {
+        const res = await fetch('/verify', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          // Remplace par ton vrai lien Discord
+          window.location.href = 'https://discord.gg/XeqyuEZVQn';
+        } else {
+          alert('Une erreur est survenue, réessaie.');
+          btn.disabled = false;
+          btn.textContent = 'Rejoindre Discord';
+        }
+      } catch(e) {
+        alert('Erreur de connexion au serveur.');
+        btn.disabled = false;
+        btn.textContent = 'Rejoindre Discord';
+      }
+    }
+  </script>
+</body>
+</html>
